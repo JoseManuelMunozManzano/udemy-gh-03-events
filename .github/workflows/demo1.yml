@@ -1,5 +1,28 @@
 name: Events Demo 1
-on: ...
+# A veces queremos que, aunque haya un evento push, no se realice el workflow, por ejemplo
+# puede que no queramos hacer el deploy al hacer el push de un branch, y solo haga el deploy cuando
+# se haga el push de la rama main.
+# Algunos events tienen Activity Types, que permiten especificar con gran detalle que versión concreta
+# del evento debería disparar el workflow (opened, closed, edited...)
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+# También existen Filters con el mismo objetivo, especificar con gran detalle cuando se disparará
+# el workflow. Lo usan, entre otros, los events push y pull
+#
+# Usando Activity Types con la palabra reservada types. Se puede indicar, por ejemplo:
+#  Solo 1
+#    types: opened
+#  Mas de 1. Primera forma
+#    types: [opened, edited]
+#  1 o mas de 1. Segunda forma
+#    types:
+#       - opened
+#       - edited
+on:
+  pull_request:
+    types:
+      - opened
+  # Añadiendo otro event
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
