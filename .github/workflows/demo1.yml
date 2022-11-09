@@ -1,4 +1,9 @@
 name: Events Demo 1
+# Para push y pull request, nos podemos saltar el workflow cuando al hacer el commit, en el mensaje
+# añadimos [skip ci] o [skip actions] ...
+# https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs
+# Por ejemplo: git commit -m "added comments [skip ci]"
+#
 # A veces queremos que, aunque haya un evento push, no se realice el workflow, por ejemplo
 # puede que no queramos hacer el deploy al hacer el push de un branch, y solo haga el deploy cuando
 # se haga el push de la rama main.
