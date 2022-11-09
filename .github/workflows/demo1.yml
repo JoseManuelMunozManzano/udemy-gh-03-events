@@ -2,11 +2,14 @@ name: Events Demo 1
 # A veces queremos que, aunque haya un evento push, no se realice el workflow, por ejemplo
 # puede que no queramos hacer el deploy al hacer el push de un branch, y solo haga el deploy cuando
 # se haga el push de la rama main.
+#
 # Algunos events tienen Activity Types, que permiten especificar con gran detalle que versión concreta
 # del evento debería disparar el workflow (opened, closed, edited...)
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+#
 # También existen Filters con el mismo objetivo, especificar con gran detalle cuando se disparará
 # el workflow. Lo usan, entre otros, los events push y pull
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 #
 # Usando Activity Types con la palabra reservada types. Se puede indicar, por ejemplo:
 #  Solo 1
@@ -21,8 +24,33 @@ on:
   pull_request:
     types:
       - opened
+    # Añadiendo Filters también en pull request
+    branches:
+      - main
+      - 'dev-*'
+      - 'feat/**'
   # Añadiendo otro event
   workflow_dispatch:
+  # Usando Filters. En este ejemplo solo queremos disparar el workflow cuando se hace el push de la rama
+  # main.
+  # Se puede especificar wildcard, por ejemplo:
+  #   - 'dev-*'
+  # para indicar que se dispare el workflow para todos los branches que empiecen por dev-
+  # Un * NO permite /, como dev-new, dev-this-is-new
+  #   - 'feat/**'
+  # para indicar que se dispare el workflow para todos los branches que empiecen por feat/
+  # Los ** permiten más /, como feat/new, feat/new/button
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushbranchestagsbranches-ignoretags-ignore
+  push:
+    branches:
+      - main
+      - 'dev-*'
+      - 'feat/**'
+    # También se pueden usar Filters basando en paths o paths-ignore
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore
+    # En este caso NO se dispara el workflows push si se hace el push de la carpeta .github/workflow
+    paths-ignore:
+      - '.github/workflows/*'
 jobs:
   deploy:
     runs-on: ubuntu-latest
